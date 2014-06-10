@@ -59,6 +59,13 @@ class deploy_acf extends deployWP_module {
 			$contents = ob_get_contents();
 			ob_end_clean();
 
+			/* Unset the POST variable again to prevent errors with rest of page-load */
+			unset($_POST['acf_posts']);
+
+			/*
+			Now we split the string to find the contents of the
+			textarea with code to use when registering the fields.
+			*/
 			$contents = preg_split('~readonly="true">~', $contents);
 			$contents = preg_split('~</textarea>~', $contents[1]);
 			$contents = '<?php '.$contents[0].' ?>';
@@ -67,6 +74,7 @@ class deploy_acf extends deployWP_module {
 			$file = fopen($file, 'w+');
 			fwrite($file, $contents);
 			fclose($file);
+
 		}
 	}
 
