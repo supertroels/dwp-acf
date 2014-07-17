@@ -32,10 +32,8 @@ class deploy_acf extends deployWP_module {
 
 	function collect(){
 		global $deployWP, $pagenow;
-
 		$method = 'collect_acf_'.$this->ver;
-		$this->$method();
-
+		add_action('init', array($this, $method));
 	}
 
 	function collect_acf_5(){
@@ -78,14 +76,19 @@ class deploy_acf extends deployWP_module {
     }
 
 	function collect_acf_4(){
+		global $pagenow, $deployWP;
+
 		if($pagenow !== 'index.php')
 			return false;
+
+		$deployWP->collecting = true;
 
 		/* The path to the file that registers the fields */
 		$file 	  = $this->env_dir.'/register-acf-fields.php';
 		
 		/* The arguments to get all ACF fields */
 		$get_acfs 	= apply_filters('deployWP/acf/collect_fields', array());
+
 		$acfs 		= array();
 		foreach($get_acfs as $get){
 			if($p = get_page_by_title($get, OBJECT, 'acf')){
@@ -145,6 +148,9 @@ class deploy_acf extends deployWP_module {
 			fclose($file);
 
 		}
+
+		$deployWP->collecting = false;
+
 	}
 
 	function deploy(){
