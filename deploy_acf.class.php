@@ -10,11 +10,7 @@ class deploy_acf extends deployWP_module {
 		$plugins 	= get_plugins();
 		$data 		= false;
 		foreach ($plugins as $plugin => $d) {
-			if($plugin == 'advanced-custom-fields-pro/acf.php'){
-				$data = $d;
-				break;
-			}
-			elseif($plugin == 'advanced-custom_fields/acf.php'){
+			if($plugin == 'advanced-custom-fields-pro/acf.php' or $plugin == 'advanced-custom-fields/acf.php'){
 				$data = $d;
 				break;
 			}
@@ -25,7 +21,7 @@ class deploy_acf extends deployWP_module {
 			return false;
 		}
 
-		$this->ver = (float)$data['Version'];
+		$this->ver = floor((float)$data['Version']);
 
 		if($this->ver < 4){
 			error_log('DWP module for ACF only supports versions 4+');
