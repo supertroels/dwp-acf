@@ -37,7 +37,7 @@ class deploy_acf extends deployWP_module {
 	function collect(){
 		global $deployWP, $pagenow;
 		$method = 'collect_acf_'.$this->ver;
-		add_action('init', array($this, $method));
+		add_action(apply_filters('deployWP/acf/collect_action', 'init'), array($this, $method), apply_filters('deployWP/acf/collect_action_priority', 10));
 	}
 
 	function collect_acf_5(){
@@ -67,7 +67,6 @@ class deploy_acf extends deployWP_module {
     }
 
     function set_json_save_dir($field_group){
-
     	if(!is_array($field_group) or !isset($field_group['key']))
     		return null;
 
